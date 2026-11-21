@@ -37,7 +37,7 @@ app.post("/todos", (req, res) => {
     return res.status(400).json({ message: "Task is required" });
   }
   const newTodo = {
-    id: todos.length + 1,
+     id: todos.length ? Math.max(...todos.map((t) => t.id)) + 1 : 1,
     task: req.body.task,
     done: false,
   };
