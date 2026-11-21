@@ -1,10 +1,20 @@
 // To-Do List API using Node.js and Express
 const express = require("express");
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Allows the server to read JSON data
 app.use(express.json());
+// Logging: prints every request (useful for monitoring)
+app.use((req, res, next) => {
+  console.log(new Date().toISOString() + " " + req.method + " " + req.url);
+  next();
+});
+
+// Health check route (used to monitor the deployed app)
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
+});
 
 // Sample data (stored in memory)
 let todos = [
