@@ -1,19 +1,17 @@
 // To-Do List API using Node.js and Express
 const express = require("express");
 const app = express();
+
+// Render gives the port through process.env.PORT
 const PORT = process.env.PORT || 3000;
 
 // Allows the server to read JSON data
 app.use(express.json());
+
 // Logging: prints every request (useful for monitoring)
 app.use((req, res, next) => {
   console.log(new Date().toISOString() + " " + req.method + " " + req.url);
   next();
-});
-
-// Health check route (used to monitor the deployed app)
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", uptime: process.uptime() });
 });
 
 // Sample data (stored in memory)
@@ -25,6 +23,11 @@ let todos = [
 // Home route
 app.get("/", (req, res) => {
   res.send("Welcome to the To-Do API");
+});
+
+// Health check route (used to monitor the deployed app)
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
 });
 
 // Get all tasks
@@ -47,7 +50,7 @@ app.post("/todos", (req, res) => {
     return res.status(400).json({ message: "Task is required" });
   }
   const newTodo = {
-     id: todos.length ? Math.max(...todos.map((t) => t.id)) + 1 : 1,
+    id: todos.length ? Math.max(...todos.map((t) => t.id)) + 1 : 1,
     task: req.body.task,
     done: false,
   };
@@ -63,5 +66,5 @@ app.delete("/todos/:id", (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log("Server running on http://localhost:" + PORT);
+  console.log("Server running on port " + PORT);
 });
